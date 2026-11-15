@@ -1,0 +1,21 @@
+# Render blueprint for the Gatekeeper agent.
+# Deploy via dashboard: New + -> Blueprint -> connect agitdut/gatekeeper-agent.
+# AGENT_GAMES_HMAC_SECRET is set after Rotate Secret in the Agent Games
+# dashboard (Environment tab in Render), then redeploy/restart.
+services:
+  - type: web
+    name: gatekeeper-agent
+    runtime: node
+    plan: free
+    repo: https://github.com/agitdut/gatekeeper-agent
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AGENT_GAMES_HMAC_SECRET
+        sync: false
+      - key: KURIER_API_KEY
+        sync: false
