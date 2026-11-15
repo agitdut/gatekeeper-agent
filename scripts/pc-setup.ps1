@@ -51,7 +51,11 @@ if (-not $cf) {
   winget install --id Cloudflare.cloudflared -e --accept-source-agreements --accept-package-agreements
   $cmd = Get-Command cloudflared -ErrorAction SilentlyContinue
   if ($cmd) { $cf = $cmd.Source }
-  if (-not $cf) { $cf = "$env:LOCALAPPDATA\Microsoft\WinGet\Links\cloudflared.exe" }
+  if (-not $cf) {
+    foreach ($p in @("$env:ProgramFiles\Cloudflare\cloudflared.exe", "$env:LOCALAPPDATA\Microsoft\WinGet\Links\cloudflared.exe")) {
+      if (Test-Path $p) { $cf = $p; break }
+    }
+  }
 }
 if (-not (Test-Path $cf)) {
   Write-Host "cloudflared tidak ketemu. Tutup PowerShell ini, buka PowerShell baru, lalu jalankan script ini lagi."
